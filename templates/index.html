@@ -1,14 +1,33 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flask Plotly App</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">    
+    <title>Todo App</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 </head>
 <body>
-    <h1>Plotly Graph in Flask</h1>
+    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo">
     <div id="graph"></div>
+    <div class="container">
+        <h1 class="title">Todo List</h1>
+        
+        <form class="add-form" action="{{ url_for('add_task') }}" method="post">
+            <input type="text" name="task" placeholder="Enter a task" class="task-input">
+            <button type="submit" class="add-button">Add Task</button>
+        </form>
+
+        <ul class="task-list">
+        {% for task in tasks %}
+            <li class="task-item">
+                <span class="task-text">{{ task }}</span>
+                <a href="{{ url_for('delete_task', task_id=loop.index0) }}" 
+                   class="delete-button">Delete</a>
+            </li>
+        {% endfor %}
+        </ul>
+    </div>
     <script>
         var graphJSON = {{ graphJSON | safe }};
         Plotly.newPlot('graph', graphJSON.data, graphJSON.layout);
