@@ -1,0 +1,23 @@
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+}
+
+.header h1{
+    margin-right: 10px;
+}
+
+.reset-button {
+    padding: 10px 20px;
+    font-size: 20px;
+}
+
+.folder-contents {
+    margin-left: 20px;
+    display: none;
+}
