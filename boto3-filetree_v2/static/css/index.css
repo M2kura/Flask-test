@@ -20,7 +20,6 @@ body {
 
 .folder-contents {
     margin-left: -20px;
-    display: none;
 }
 
 .folder {
@@ -30,3 +29,21 @@ body {
 .spinner-cursor, .spinner-cursor * {
     cursor: wait !important;
 }
+
+.hidden {
+    display: none;
+}
+
+.file-tree2 {
+    width: 25%;
+}
+
+.breadcrumb {
+    margin-bottom: 0;
+}
+
+
+
+
+
+
