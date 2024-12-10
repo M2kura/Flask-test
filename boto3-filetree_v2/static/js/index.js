@@ -13,7 +13,6 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 reloadButton.addEventListener('click', () => {
-    console.log("Button pressed");
     breadCrumb.innerHTML = `
     <li class="breadcrumb-item active" aria-current="folder" folder-path="">Domů</li>`;
     fileTreeList.innerHTML = `<li class="list-group-item">${spinner}</li>`;
@@ -37,7 +36,6 @@ function fetchData() {
 function createFileTree(structure, pathStr="") {
     fileTreeList.innerHTML = '';
     path = pathStr.split('/');
-    console.log(path);
     path.pop();
     for (const e of path) {
         structure = structure[e+"/"];
@@ -82,9 +80,22 @@ function createFileTree(structure, pathStr="") {
             });
             newListItem.appendChild(link);
             if (key.includes('.') && key.split('.')[1] === 'html') {
-                newListItem.innerHTML = `
-                <button class="html-button">Show page</button>`
-                + newListItem.innerHTML;
+                const showBtn = document.createElement('button');
+                showBtn.type = "button";
+                showBtn.classList.add('btn', 'btn-secondary', 'btn-sm', 'html-btn');
+                showBtn.textContent = "Zobrazit obsah";
+                showBtn.addEventListener('click', function() {
+                    fetch('/show?key=' + this.nextElementSibling.getAttribute('data-file-path'))
+                    .then(response => response.text())
+                    .then(html => {
+                        const newWindow = window.open();
+                        newWindow.document.open();
+                        document.write(html);
+                        document.close();
+                    })
+                    .catch(error => console.error('Error: ', error));
+                });
+                newListItem.insertBefore(showBtn, newListItem.firstChild);
             }
         } else {
             newListItem.innerHTML = key.slice(0, -1);
@@ -97,7 +108,6 @@ function createFileTree(structure, pathStr="") {
                 crumb.setAttribute('folder-path', pathStr + key);
                 crumb.innerHTML = newListItem.innerHTML;
                 const prevEl = breadCrumb.lastElementChild;
-                console.log(prevEl);
                 const link = document.createElement('a');
                 link.textContent = prevEl.textContent;
                 link.href = "#";
@@ -121,6 +131,10 @@ function createFileTree(structure, pathStr="") {
                 breadCrumb.appendChild(crumb);
             });
         }
-        fileTreeList.appendChild(newListItem);
+        if ("Data/" in structure && structure[key] === null) {
+            fileTreeList.insertBefore(newListItem, fileTreeList.firstChild);
+        } else {
+            fileTreeList.appendChild(newListItem);
+        }
     }
 }

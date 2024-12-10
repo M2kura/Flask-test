@@ -42,7 +42,10 @@ body {
     margin-bottom: 0;
 }
 
-
+.html-btn {
+    padding: 3px 5px;
+    margin-right: 10px;
+}
 
 
 

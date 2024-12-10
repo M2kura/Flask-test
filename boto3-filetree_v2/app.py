@@ -62,5 +62,17 @@ def download_file():
         if os.path.exists(local_path):
             os.remove(local_path)
 
+@app.route('/show', methods=['GET'])
+def show():
+    key = request.args.get('key')
+    if not key:
+        return jsonify({"error": "Missing key"}), 400
+    try:
+        s3_object = s3_client.get_object(Bucket=bucket_name, Key=folder_name+key)
+        html_content = s3_object['Body'].read()
+        return html_content
+    except Exception as e:
+        return str(e), 404
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
