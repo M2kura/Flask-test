@@ -85,15 +85,19 @@ function createFileTree(structure, pathStr="") {
                 showBtn.classList.add('btn', 'btn-secondary', 'btn-sm', 'html-btn');
                 showBtn.textContent = "Zobrazit obsah";
                 showBtn.addEventListener('click', function() {
+                    document.body.classList.add('spinner-cursor');
                     fetch('/show?key=' + this.nextElementSibling.getAttribute('data-file-path'))
                     .then(response => response.text())
                     .then(html => {
                         const newWindow = window.open();
                         newWindow.document.open();
-                        document.write(html);
-                        document.close();
+                        newWindow.document.write(html);
+                        newWindow.document.close();
                     })
-                    .catch(error => console.error('Error: ', error));
+                    .catch(error => console.error('Error: ', error))
+                    .finally(() => {
+                        document.body.classList.remove('spinner-cursor');
+                    });
                 });
                 newListItem.insertBefore(showBtn, newListItem.firstChild);
             }
